@@ -1,0 +1,28 @@
+# docker-compose.yml — 本地测试 & 一键启动
+# 使用方法: docker compose up --build
+
+version: "3.8"
+
+services:
+  backend:
+    build: ./backend
+    container_name: restaurant-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - db-data:/data
+    environment:
+      - DATABASE_URL=sqlite:////data/restaurant_ranking.db
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    container_name: restaurant-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  db-data:
